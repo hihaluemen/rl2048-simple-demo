@@ -177,6 +177,7 @@ runs/sample_dqn_2048/
 - [G2 任务规划](docs/G2_task_plan.md)
 - [G3 开发与 Review 报告](docs/G3_review_report.md)
 - [G4 验收记录](docs/G4_acceptance.md)
+- [第三方依赖与来源说明](THIRD_PARTY_NOTICES.md)
 
 更详细的设计和实现计划：
 
