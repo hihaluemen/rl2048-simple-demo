@@ -37,6 +37,12 @@ python3 -m venv .venv
 .venv/bin/streamlit run scripts/app.py
 ```
 
+也可以使用一键 demo 脚本启动：
+
+```bash
+bash scripts/demo.sh
+```
+
 ## 从零训练
 
 运行默认训练：
@@ -73,6 +79,8 @@ runs/sample_dqn_2048/
 
 它的目标是保证演示链路稳定：UI 能读取曲线，评估脚本能加载 checkpoint。这个 checkpoint 由短训练生成，不代表强策略。
 
+在 UI 底部的“模型自动玩 2048”区域，可以加载 checkpoint，让模型自动运行一局 2048，并用棋盘格实时/逐步展示每一步动作、分数和最大 tile。
+
 如需重新生成一个轻量 sample checkpoint：
 
 ```bash
@@ -96,7 +104,8 @@ runs/sample_dqn_2048/
 ├── scripts/
 │   ├── train.py
 │   ├── evaluate.py
-│   └── app.py
+│   ├── app.py
+│   └── demo.sh
 ├── tests/
 ├── docs/
 ├── runs/sample_dqn_2048/

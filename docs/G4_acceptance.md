@@ -6,6 +6,7 @@
 - 短训练能生成实验 artifacts。
 - sample checkpoint 能被评估脚本加载。
 - Streamlit UI 能读取 sample run。
+- Streamlit UI 能加载 checkpoint，并以棋盘格展示模型自动玩 2048 的过程。
 - README 命令可复现。
 
 ## 当前验证结果
@@ -21,7 +22,7 @@
 结果：
 
 ```text
-16 passed
+17 passed
 ```
 
 ### sample checkpoint 评估
@@ -44,7 +45,17 @@ best_max_tile: 16
 命令：
 
 ```bash
-.venv/bin/python -m py_compile scripts/app.py
+.venv/bin/python -m py_compile scripts/app.py scripts/train.py scripts/evaluate.py
+```
+
+结果：通过。
+
+### 一键 demo 脚本检查
+
+命令：
+
+```bash
+bash -n scripts/demo.sh
 ```
 
 结果：通过。
@@ -72,5 +83,5 @@ Run saved to: runs/_tmp_sample_training/20260629_010236_sample_checkpoint
 - 测试通过。
 - 训练脚本可生成实验 artifacts。
 - sample checkpoint 可被评估脚本加载。
-- Streamlit 脚本语法检查通过，且可读取 sample run 数据。
+- Streamlit 脚本语法检查通过，且可读取 sample run 数据、加载 checkpoint 并渲染模型自动游玩过程。
 - README 已补充安装、测试、训练、评估和 UI 启动步骤。

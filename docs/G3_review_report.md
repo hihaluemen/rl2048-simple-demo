@@ -44,12 +44,13 @@
 
 - `scripts/train.py` 和 `scripts/evaluate.py` 可直接用 Python 运行。
 - checkpoint 缺失时，评估脚本给出清晰错误。
-- Streamlit 在无 checkpoint 时提示，在有 checkpoint 时加载并展示回放帧。
+- 模型自动游玩逻辑集中在 `rl2048/play.py`，CLI 和 UI 复用同一条 rollout 链路。
+- Streamlit 在无 checkpoint 时提示，在有 checkpoint 时加载模型并用棋盘格展示自动游玩过程。
 
-结论：评估脚本测试通过，UI 通过语法检查和 sample checkpoint 手动评估验证。
+结论：评估脚本测试和自动游玩测试通过，UI 通过语法检查和 sample checkpoint 手动评估验证。
 
 ## 已知限制
 
 - sample checkpoint 只用于证明加载和回放链路，不代表强策略。
 - 默认 DQN 没有 Double DQN、Dueling DQN 或 prioritized replay。
-- UI 是 MVP，不包含复杂实验筛选、权限或后台任务管理。
+- UI 是 MVP，不包含复杂实验筛选、权限或后台训练任务管理。

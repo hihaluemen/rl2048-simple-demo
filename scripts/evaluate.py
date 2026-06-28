@@ -10,6 +10,7 @@ import torch
 
 from rl2048.dqn import DQNAgent
 from rl2048.env import Game2048Env
+from rl2048.play import play_episode
 from rl2048.utils import get_device, load_yaml
 
 
@@ -60,20 +61,21 @@ def evaluate(run_dir: Path, episodes: int, render: bool) -> tuple[float, int]:
     best_max_tile = 0
     max_steps = int(config.get("training", {}).get("max_steps_per_episode", 2000))
     for episode in range(1, episodes + 1):
-        observation, _ = env.reset(seed=config.get("seed", 42) + episode)
+        result = play_episode(
+            env,
+            agent,
+            seed=config.get("seed", 42) + episode,
+            max_steps=max_steps,
+        )
         if render:
-            print(env.render())
-            print()
-        for _ in range(max_steps):
-            action = agent.select_action(observation, step=10**9)
-            observation, _, terminated, truncated, _ = env.step(action)
-            if render:
+            for frame in result.frames:
+                if frame.action_name is not None:
+                    print(f"action={frame.action_name} reward={frame.reward:.2f}")
+                env.board = frame.board
                 print(env.render())
                 print()
-            if terminated or truncated:
-                break
-        scores.append(env.score)
-        best_max_tile = max(best_max_tile, int(env.board.max()))
+        scores.append(result.score)
+        best_max_tile = max(best_max_tile, result.max_tile)
 
     average_score = sum(scores) / max(1, len(scores))
     return average_score, best_max_tile
