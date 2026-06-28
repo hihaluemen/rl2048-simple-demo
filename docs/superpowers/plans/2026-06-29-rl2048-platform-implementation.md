@@ -4,7 +4,7 @@
 
 **Goal:** 构建一个纯 Python 的 2048 DQN 训练实验平台 MVP，包含环境、训练、实验记录、可视化、测试和 G0-G4 文档。
 
-**Architecture:** 核心库放在 `rl2048/`，脚本入口放在 `scripts/`，测试放在 `tests/`。实现先锁定 2048 规则和 Gymnasium 风格 API，再接入实验记录、DQN 训练、评估脚本和 Streamlit UI，最后补齐 README 与过程文档。
+**Architecture:** 核心库放在 `rl2048/`，脚本入口放在 `scripts/`，测试放在 `tests/`。实现先锁定 2048 规则和 Gymnasium API，再接入实验记录、DQN 训练、评估脚本和 Streamlit UI，最后补齐 README 与过程文档。
 
 **Tech Stack:** Python 3.11+, NumPy, PyTorch, PyYAML, pandas, Streamlit, pytest.
 
@@ -16,10 +16,11 @@
 
 - 新增 `rl2048/play.py`，负责 checkpoint 加载、模型自动游玩和棋盘帧记录。
 - 新增 `Game2048Env.legal_actions()`，用于环境规则验证、DQN 合法动作选择和 UI 回放阶段动作过滤。
+- 补齐严格 Gymnasium 兼容：继承 `gymnasium.Env`，声明 action/observation space，并增加 `check_env` 测试。
 - 新增 `scripts/demo.sh`，作为一键启动入口。
 - 新增 `configs/sample_dqn_2048.yaml` 与 `configs/dqn_2048_stronger.yaml`，分别支持快速样例生成和更长训练。
 - 新增模型自动游玩相关测试，当前测试集覆盖环境、DQN 组件、训练 smoke、评估脚本和回放逻辑。
-- 本地 stronger run `runs/20260629_021317_dqn_2048_stronger` 训练 5000 episodes，summary 记录 `best_score=6024`、`best_max_tile=512`。
+- curated 展示 run `runs/stronger_dqn_2048` 训练 5000 episodes，summary 记录 `best_score=6024`、`best_max_tile=512`。
 
 原始 checklist 保留为实施过程记录；最终验收以 `docs/G4_acceptance.md` 和 `docs/G3_review_report.md` 为准。
 
@@ -35,7 +36,7 @@
 - `requirements.txt`：项目依赖。
 - `.gitignore`：忽略缓存、虚拟环境、临时训练输出；保留 `runs/sample_dqn_2048/`。
 - `configs/dqn_2048.yaml`：默认 DQN 训练配置。
-- `rl2048/env.py`：2048 规则、Gymnasium 风格环境、渲染。
+- `rl2048/env.py`：2048 规则、Gymnasium 环境、渲染。
 - `rl2048/replay_buffer.py`：DQN 经验回放。
 - `rl2048/dqn.py`：Q 网络和 DQN agent。
 - `rl2048/experiment.py`：run 目录、metrics、summary、checkpoint 路径管理。

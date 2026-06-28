@@ -13,7 +13,8 @@
 9. Streamlit UI：查看曲线、对比实验、加载 checkpoint 自动玩 2048。
 10. 示例实验：提交 sample metrics 和 sample checkpoint。
 11. 长训练配置：提供 `configs/dqn_2048_stronger.yaml`，用于面试前离线训练更强 baseline。
-12. 文档和验收：补齐 README、G0-G4、Review 报告和最终验证结果。
+12. Gymnasium 兼容：继承 `gymnasium.Env`，声明 `action_space` / `observation_space`，并用 `check_env` 验证。
+13. 文档和验收：补齐 README、G0-G4、Review 报告和最终验证结果。
 
 ## 技术方案
 
@@ -41,4 +42,4 @@
 - 已增加 `rl2048/play.py`，负责 checkpoint 加载和模型自动游玩。
 - 已增加 `Game2048Env.legal_actions()`，用于规则测试、agent 动作选择和回放阶段动作过滤。
 - 已增加 `tests/test_play.py`，覆盖自动游玩帧、合法动作过滤和结束原因。
-- 当前本地 stronger run：`runs/20260629_021317_dqn_2048_stronger`，训练 5000 episodes，summary 记录 `best_score=6024`、`best_max_tile=512`。
+- 已增加 `runs/stronger_dqn_2048` curated 展示 run，训练 5000 episodes，summary 记录 `best_score=6024`、`best_max_tile=512`。

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import gymnasium as gym
 import numpy as np
+from gymnasium import spaces
 
 
 ACTION_NAMES = {0: "up", 1: "right", 2: "down", 3: "left"}
@@ -15,7 +17,9 @@ class RewardConfig:
     max_tile_weight: float = 0.01
 
 
-class Game2048Env:
+class Game2048Env(gym.Env):
+    metadata = {"render_modes": ["ansi"]}
+
     def __init__(
         self,
         seed: int | None = None,
@@ -28,6 +32,13 @@ class Game2048Env:
             empty_cell_weight=empty_cell_weight,
             max_tile_weight=max_tile_weight,
         )
+        self.action_space = spaces.Discrete(4)
+        self.observation_space = spaces.Box(
+            low=0.0,
+            high=16.0,
+            shape=(16,),
+            dtype=np.float32,
+        )
         self.rng = np.random.default_rng(seed)
         self.board = np.zeros((4, 4), dtype=np.int64)
         self.score = 0
@@ -35,6 +46,7 @@ class Game2048Env:
     def reset(
         self, seed: int | None = None, options: dict | None = None
     ) -> tuple[np.ndarray, dict]:
+        super().reset(seed=seed)
         if seed is not None:
             self.rng = np.random.default_rng(seed)
         self.board = np.zeros((4, 4), dtype=np.int64)

@@ -22,7 +22,8 @@
 - observation 是 shape `(16,)` 的 `float32` 向量。
 - 初始棋盘有两个 tile。
 - 相同 seed 的 reset 可复现。
-- `step` 返回 Gymnasium 风格五元组。
+- `step` 返回 Gymnasium 五元组。
+- 环境继承 `gymnasium.Env`，声明 action/observation space，并通过 `check_env`。
 
 ## 工具和实验记录测试
 

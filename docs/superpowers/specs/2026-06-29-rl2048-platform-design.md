@@ -9,7 +9,7 @@
 ## 目标
 
 - 构建一个纯 Python MVP，方便面试时快速理解和运行。
-- 从零实现 2048 环境，并提供 Gymnasium 风格接口：`reset`、`step`、`render`。
+- 从零实现 2048 环境，并提供 Gymnasium 标准接口：`reset`、`step`、`render`、action/observation space。
 - 实现一种强化学习算法：DQN。
 - 通过 YAML 配置管理 DQN 和训练超参数。
 - 每次训练自动记录实验配置、训练指标、模型检查点和实验摘要。
@@ -87,7 +87,7 @@ pytest
 - `step(action) -> (observation, reward, terminated, truncated, info)`
 - `render(mode="ansi")`
 
-接口风格遵循 Gymnasium，但实现保持轻量，不引入不必要的平台抽象。
+环境继承 `gymnasium.Env`，接口遵循 Gymnasium 标准。
 
 ### 状态表示
 
@@ -244,7 +244,8 @@ runs/<run_id>/
 - 非法动作不改变棋盘，也不生成新 tile。
 - game over 判断正确。
 - seeded reset 可复现。
-- `reset` 和 `step` 返回 Gymnasium 风格元组。
+- `reset` 和 `step` 返回 Gymnasium 标准元组。
+- 环境声明 `action_space` / `observation_space`，并通过 `check_env`。
 - 短训练 smoke test 能生成 `metrics.csv` 和 checkpoint。
 
 测试不需要证明 DQN 一定能收敛到 2048。
@@ -295,4 +296,4 @@ MVP 满足以下条件即视为完成：
 - 增加 `scripts/demo.sh`，覆盖“一键启动”要求。
 - 增加 `configs/sample_dqn_2048.yaml` 和 `configs/dqn_2048_stronger.yaml`，分别服务快速样例生成和更长训练。
 - Streamlit UI 不只展示曲线，也支持模型自动玩 2048，并展示每步棋盘、分数、最大 tile 和结束原因。
-- 本地 stronger run 训练 5000 episodes，曾达到 `best_score=6024`、`best_max_tile=512`；该 run 作为本地验证证据，不默认纳入仓库。
+- `runs/stronger_dqn_2048` curated 展示 run 训练 5000 episodes，曾达到 `best_score=6024`、`best_max_tile=512`；仓库只保留 latest checkpoint，不提交全部中间 checkpoint。

@@ -33,6 +33,7 @@
 - 静态阅读核心代码，重点看规则实现、训练数据流、checkpoint 保存和 UI 状态展示。
 - 用 pytest 覆盖环境规则、DQN 组件、实验记录、训练 smoke test、评估脚本和模型回放。
 - 手动运行 sample checkpoint 评估。
+- 使用 `gymnasium.utils.env_checker.check_env` 验证环境严格兼容 Gymnasium API。
 - 手动打开 Streamlit UI，检查训练曲线和模型自动游玩展示。
 - 对照原始需求逐项确认功能闭环。
 
@@ -47,6 +48,7 @@
 | R5 | 模型回放 | game over 和前端卡住不容易区分 | 用户误解模型或 UI 卡死 | `PlayResult` 增加 `end_reason`，UI 显示结束原因 | `tests/test_play.py::test_play_episode_reports_game_over_reason` |
 | R6 | 评估脚本 | checkpoint 缺失时需要清晰报错 | 面试复现失败时难定位 | 缺少 `latest.pt` 时返回非 0 并输出路径 | `tests/test_evaluate_script.py::test_evaluate_reports_missing_checkpoint` |
 | R7 | 实验记录 | 训练 artifacts 必须结构化保存 | 训练结果不可复现、不可比较 | 每个 run 保存 config、metrics、summary、checkpoints | `tests/test_experiment.py` |
+| R8 | 2048 环境 | 仅有 Gymnasium 风格接口，不足以证明严格兼容 | 面试官或外部 RL 工具可能要求 `gymnasium.Env`、space 声明和 checker 通过 | 继承 `gymnasium.Env`，声明 `action_space` / `observation_space`，增加 `check_env` 测试 | `tests/test_env_api.py::test_env_is_strictly_gymnasium_compatible` |
 
 ## 5. 模块 Review 结论
 
@@ -58,10 +60,13 @@
 - 非法移动不改变棋盘，也不生成新 tile。
 - `score_delta` 使用合并后的 tile 值。
 - `reset(seed=...)` 可复现。
-- `step` 返回 Gymnasium 风格五元组。
+- `step` 返回 Gymnasium 五元组。
+- 继承 `gymnasium.Env`。
+- 声明 `action_space=Discrete(4)` 和 `observation_space=Box(shape=(16,), dtype=float32)`。
+- 通过 `gymnasium.utils.env_checker.check_env`。
 - `legal_actions()` 能排除 no-op 动作。
 
-结论：核心规则已通过测试覆盖。当前实现是 Gymnasium 风格接口，但尚未继承 `gymnasium.Env`，也未声明 `action_space` / `observation_space`。如果面试官严格要求 Gymnasium 兼容，这是后续最值得补的一点。
+结论：核心规则已通过测试覆盖，环境也已按 Gymnasium 严格接口补齐。
 
 ### 5.2 DQN 算法
 
@@ -113,7 +118,7 @@
 当前测试覆盖：
 
 - 环境规则。
-- Gymnasium 风格 API。
+- Gymnasium API 和 `check_env` 兼容性。
 - DQN 组件。
 - 实验记录。
 - 训练 smoke test。
@@ -130,7 +135,7 @@
 当前结果：
 
 ```text
-21 passed
+23 passed
 ```
 
 ## 6. 验收证据
@@ -146,7 +151,7 @@
 结果：
 
 ```text
-21 passed in 1.85s
+23 passed in 1.83s
 ```
 
 ### 6.2 sample checkpoint 评估
@@ -175,7 +180,7 @@ best_max_tile: 16
 已完成 run：
 
 ```text
-runs/20260629_021317_dqn_2048_stronger
+runs/stronger_dqn_2048
 ```
 
 summary：
@@ -186,23 +191,23 @@ best_score: 6024
 best_max_tile: 512
 ```
 
+说明：该目录是从本地训练 run 整理出的 curated 展示产物，只保留 `latest.pt`，不提交全部中间 checkpoint。
+
 ## 7. 剩余风险
 
-- **Gymnasium 严格兼容**：当前是 Gymnasium 风格接口，但未继承 `gymnasium.Env`，未声明 `action_space` / `observation_space`。
 - **算法强度**：基础 DQN 能证明训练链路，但稳定达到 1024/2048 需要更长训练或 Double/Dueling DQN 等改进。
 - **训练复现时间**：README 5 分钟内可复现 demo，但从零训练强模型不保证 5 分钟完成。
 - **UI 范围**：当前 UI 只做实验查看和模型回放，不包含后台训练任务管理。
-- **sample checkpoint**：仓库内置 sample checkpoint 用于稳定演示，不代表最强模型。
+- **sample checkpoint**：仓库内置 sample checkpoint 用于稳定演示，不代表最强模型；更强展示使用 `runs/stronger_dqn_2048`。
 
 ## 8. 最终 Review 结论
 
 当前项目满足原始题目的 MVP 要求：
 
 - 有从零实现的 2048 环境。
+- 环境继承 `gymnasium.Env`，声明 action/observation space，并通过 `check_env`。
 - 有 DQN 算法和 YAML 配置。
 - 训练过程自动记录配置、指标和 checkpoint。
 - Streamlit UI 能查看曲线、对比实验，并展示模型自动玩 2048。
 - 提供脚本一键启动。
 - 有测试证明核心行为正确。
-
-建议在最终展示前优先补充 Gymnasium 严格兼容字段，并考虑用较长训练 run 替换默认 sample checkpoint。

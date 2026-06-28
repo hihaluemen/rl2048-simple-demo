@@ -2,7 +2,7 @@
 
 这是一个纯 Python 的强化学习训练实验平台 MVP，以 2048 作为训练环境，实现了：
 
-- 从零实现的 2048 环境，提供 Gymnasium 风格 `reset`、`step`、`render` 接口。
+- 从零实现的 2048 环境，继承 `gymnasium.Env`，提供标准 `reset`、`step`、`render` 接口和 action/observation space。
 - DQN baseline。
 - YAML 配置管理。
 - 实验指标、配置、summary 和 checkpoint 自动记录。
@@ -83,13 +83,23 @@ Run saved to: runs/20260629_xxxxxx_dqn_2048_stronger
 .venv/bin/python scripts/evaluate.py --run runs/你的run目录 --episodes 10
 ```
 
-如果新模型效果更好，可以替换默认 sample run：
+仓库内置了一个 curated stronger run，便于 clone 后直接查看更像样的训练曲线和 checkpoint：
+
+```text
+runs/stronger_dqn_2048/
+├── config.yaml
+├── metrics.csv
+├── summary.json
+└── checkpoints/latest.pt
+```
+
+它来自 5000 episodes 的 stronger 配置训练，summary 记录 `best_score=6024`、`best_max_tile=512`。如果新模型效果更好，可以替换这个展示 run：
 
 ```bash
-cp runs/你的run目录/config.yaml runs/sample_dqn_2048/config.yaml
-cp runs/你的run目录/metrics.csv runs/sample_dqn_2048/metrics.csv
-cp runs/你的run目录/summary.json runs/sample_dqn_2048/summary.json
-cp runs/你的run目录/checkpoints/latest.pt runs/sample_dqn_2048/checkpoints/latest.pt
+cp runs/你的run目录/config.yaml runs/stronger_dqn_2048/config.yaml
+cp runs/你的run目录/metrics.csv runs/stronger_dqn_2048/metrics.csv
+cp runs/你的run目录/summary.json runs/stronger_dqn_2048/summary.json
+cp runs/你的run目录/checkpoints/latest.pt runs/stronger_dqn_2048/checkpoints/latest.pt
 ```
 
 ## 快速 sample checkpoint
@@ -137,6 +147,7 @@ runs/sample_dqn_2048/
 ├── tests/
 ├── docs/
 ├── runs/sample_dqn_2048/
+├── runs/stronger_dqn_2048/
 └── requirements.txt
 ```
 
@@ -176,6 +187,6 @@ runs/sample_dqn_2048/
 
 - 首版只实现 DQN，没有 PPO。
 - 没有分布式训练、多智能体协同或外部仿真器集成。
-- sample checkpoint 不保证达到 2048，只用于稳定展示平台链路。
+- sample checkpoint 不保证达到 2048，只用于稳定展示平台链路；`runs/stronger_dqn_2048` 用于展示更长训练结果。
 - UI 是 MVP，没有后台训练任务管理。
 - 首版不依赖 Docker 或 Makefile。

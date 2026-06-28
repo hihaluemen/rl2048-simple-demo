@@ -31,6 +31,12 @@ dist/
 runs/*
 !runs/sample_dqn_2048/
 !runs/sample_dqn_2048/**
+!runs/stronger_dqn_2048/
+!runs/stronger_dqn_2048/config.yaml
+!runs/stronger_dqn_2048/metrics.csv
+!runs/stronger_dqn_2048/summary.json
+!runs/stronger_dqn_2048/checkpoints/
+!runs/stronger_dqn_2048/checkpoints/latest.pt
 
 # Model artifacts outside curated sample runs
 *.pt
@@ -39,3 +45,6 @@ runs/*
 !runs/sample_dqn_2048/**/*.pt
 !runs/sample_dqn_2048/**/*.pth
 !runs/sample_dqn_2048/**/*.ckpt
+!runs/stronger_dqn_2048/checkpoints/latest.pt
+
+tmp/
