@@ -7,6 +7,7 @@
 - sample checkpoint 能被评估脚本加载。
 - Streamlit UI 能读取 sample run。
 - Streamlit UI 能加载 checkpoint，并以棋盘格展示模型自动玩 2048 的过程。
+- 模型自动游玩不会反复执行非法 no-op，结束时能显示 game over、truncated 或 max steps。
 - README 命令可复现。
 
 ## 当前验证结果
@@ -39,6 +40,43 @@
 average_score: 156.00
 best_max_tile: 16
 ```
+
+### stronger 配置本地训练记录
+
+命令：
+
+```bash
+.venv/bin/python scripts/train.py --config configs/dqn_2048_stronger.yaml
+```
+
+结果：
+
+```text
+Run saved to: runs/20260629_021317_dqn_2048_stronger
+```
+
+该 run 的 `summary.json` 记录：
+
+```text
+total_episodes: 5000
+best_score: 6024
+best_max_tile: 512
+```
+
+补充评估命令：
+
+```bash
+.venv/bin/python scripts/evaluate.py --run runs/20260629_021317_dqn_2048_stronger --episodes 20
+```
+
+历史评估结果：
+
+```text
+average_score: 1737.80
+best_max_tile: 512
+```
+
+说明：该 stronger run 是本地训练验证产物，默认不提交到仓库；仓库内置的 `runs/sample_dqn_2048` 仍用于快速稳定演示。
 
 ### UI 语法检查
 
@@ -84,4 +122,5 @@ Run saved to: runs/_tmp_sample_training/20260629_010236_sample_checkpoint
 - 训练脚本可生成实验 artifacts。
 - sample checkpoint 可被评估脚本加载。
 - Streamlit 脚本语法检查通过，且可读取 sample run 数据、加载 checkpoint 并渲染模型自动游玩过程。
+- stronger 配置可以离线训练出明显强于 sample checkpoint 的 DQN baseline，并已通过本地 run 验证到 512 tile。
 - README 已补充安装、测试、训练、评估和 UI 启动步骤。

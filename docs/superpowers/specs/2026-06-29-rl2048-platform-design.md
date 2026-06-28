@@ -54,11 +54,13 @@ pytest
 │   ├── replay_buffer.py
 │   ├── trainer.py
 │   ├── experiment.py
+│   ├── play.py
 │   └── utils.py
 ├── scripts/
 │   ├── train.py
 │   ├── evaluate.py
-│   └── app.py
+│   ├── app.py
+│   └── demo.sh
 ├── tests/
 │   ├── test_env_rules.py
 │   ├── test_env_api.py
@@ -283,3 +285,14 @@ MVP 满足以下条件即视为完成：
 - `streamlit run scripts/app.py` 能打开 UI，并至少查看一个实验。
 - README 启动步骤不依赖 Makefile 或 Docker。
 - G0 到 G4 文档存在，并且与实际实现范围一致。
+
+## 实现后记
+
+最终实现相对首版设计做了几处补充：
+
+- 增加 `rl2048/play.py`，把模型自动游玩从 UI 中拆出来，便于测试和复用。
+- 增加 `Game2048Env.legal_actions()`，训练/回放阶段可以过滤非法动作，避免 DQN 在演示时反复执行 no-op。
+- 增加 `scripts/demo.sh`，覆盖“一键启动”要求。
+- 增加 `configs/sample_dqn_2048.yaml` 和 `configs/dqn_2048_stronger.yaml`，分别服务快速样例生成和更长训练。
+- Streamlit UI 不只展示曲线，也支持模型自动玩 2048，并展示每步棋盘、分数、最大 tile 和结束原因。
+- 本地 stronger run 训练 5000 episodes，曾达到 `best_score=6024`、`best_max_tile=512`；该 run 作为本地验证证据，不默认纳入仓库。

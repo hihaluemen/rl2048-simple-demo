@@ -10,10 +10,25 @@
 
 ---
 
+## 执行结果补充
+
+该计划已按 MVP 范围落地，最终实现相对原计划增加了以下内容：
+
+- 新增 `rl2048/play.py`，负责 checkpoint 加载、模型自动游玩和棋盘帧记录。
+- 新增 `Game2048Env.legal_actions()`，用于环境规则验证、DQN 合法动作选择和 UI 回放阶段动作过滤。
+- 新增 `scripts/demo.sh`，作为一键启动入口。
+- 新增 `configs/sample_dqn_2048.yaml` 与 `configs/dqn_2048_stronger.yaml`，分别支持快速样例生成和更长训练。
+- 新增模型自动游玩相关测试，当前测试集覆盖环境、DQN 组件、训练 smoke、评估脚本和回放逻辑。
+- 本地 stronger run `runs/20260629_021317_dqn_2048_stronger` 训练 5000 episodes，summary 记录 `best_score=6024`、`best_max_tile=512`。
+
+原始 checklist 保留为实施过程记录；最终验收以 `docs/G4_acceptance.md` 和 `docs/G3_review_report.md` 为准。
+
+---
+
 ## 参考文档
 
 - 设计文档：`docs/superpowers/specs/2026-06-29-rl2048-platform-design.md`
-- 原始题目：`动态2题目：RL训练实验平台.md`
+- 原始题目：`tmp/动态2题目：RL训练实验平台.md`
 
 ## 文件职责
 
