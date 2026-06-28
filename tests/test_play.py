@@ -48,3 +48,20 @@ def test_play_episode_falls_back_to_legal_action():
     played_frames = result.frames[1:]
     assert played_frames
     assert all(frame.valid_move for frame in played_frames)
+
+
+def test_play_episode_reports_game_over_reason():
+    env = Game2048Env(seed=1)
+    env.board = np.array(
+        [
+            [2, 4, 2, 4],
+            [4, 2, 4, 2],
+            [2, 4, 2, 4],
+            [4, 2, 4, 2],
+        ]
+    )
+
+    result = play_episode(env, AlwaysLeftAgent(), seed=None, max_steps=8, reset_env=False)
+
+    assert result.terminated is True
+    assert result.end_reason == "game_over"

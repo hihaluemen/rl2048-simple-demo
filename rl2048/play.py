@@ -32,6 +32,7 @@ class PlayResult:
     max_tile: int
     steps: int
     terminated: bool
+    end_reason: str
 
 
 def play_episode(
@@ -39,8 +40,13 @@ def play_episode(
     policy: Policy,
     seed: int | None,
     max_steps: int,
+    reset_env: bool = True,
 ) -> PlayResult:
-    observation, info = env.reset(seed=seed)
+    if reset_env:
+        observation, info = env.reset(seed=seed)
+    else:
+        observation = env._get_observation()
+        info = env._info(score_delta=0, valid_move=True)
     frames = [
         PlayFrame(
             board=env.board.copy(),
@@ -53,6 +59,17 @@ def play_episode(
         )
     ]
     terminated = False
+    end_reason = "max_steps"
+
+    if env.is_game_over():
+        return PlayResult(
+            frames=frames,
+            score=int(env.score),
+            max_tile=int(env.board.max()),
+            steps=0,
+            terminated=True,
+            end_reason="game_over",
+        )
 
     for step in range(max_steps):
         action = select_play_action(env, policy, observation, step)
@@ -69,6 +86,7 @@ def play_episode(
             )
         )
         if terminated or truncated:
+            end_reason = "game_over" if terminated else "truncated"
             break
 
     return PlayResult(
@@ -77,6 +95,7 @@ def play_episode(
         max_tile=int(env.board.max()),
         steps=len(frames) - 1,
         terminated=terminated,
+        end_reason=end_reason,
     )
 
 

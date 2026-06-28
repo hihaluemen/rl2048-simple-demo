@@ -93,6 +93,15 @@ def render_board(board) -> None:
     components.html(board_html(board), height=400, scrolling=False)
 
 
+def end_reason_label(end_reason: str) -> str:
+    labels = {
+        "game_over": "本局已结束：棋盘无合法动作",
+        "max_steps": "已达到最大步数限制",
+        "truncated": "本局被截断",
+    }
+    return labels.get(end_reason, end_reason)
+
+
 @st.cache_data(show_spinner=False)
 def build_play_result(run_dir_text: str, max_steps: int, seed: int) -> PlayResult:
     run_dir = Path(run_dir_text)
@@ -142,6 +151,7 @@ def render_checkpoint_preview(run_dir: Path) -> None:
                 import time
 
                 time.sleep(speed)
+        st.success(end_reason_label(result.end_reason))
         return
 
     with left:
@@ -159,9 +169,11 @@ def render_checkpoint_preview(run_dir: Path) -> None:
         c3.metric("当前 Step", selected_frame)
         c4.metric("当前 Action", frame.action_name or "-")
         render_board(frame.board)
+        if selected_frame == len(result.frames) - 1:
+            st.success(end_reason_label(result.end_reason))
         st.caption(
             f"最终总步数={result.steps}，最终 score={result.score}，"
-            f"最终 max_tile={result.max_tile}，terminated={result.terminated}"
+            f"最终 max_tile={result.max_tile}，结束原因={end_reason_label(result.end_reason)}"
         )
 
 

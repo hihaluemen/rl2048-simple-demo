@@ -22,7 +22,7 @@
 结果：
 
 ```text
-20 passed
+21 passed
 ```
 
 ### sample checkpoint 评估
