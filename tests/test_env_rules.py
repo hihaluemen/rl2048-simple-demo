@@ -49,3 +49,18 @@ def test_game_over_detection():
         ]
     )
     assert env.is_game_over()
+
+
+def test_legal_actions_excludes_noop_moves():
+    env = Game2048Env(seed=1)
+    env.board = np.array(
+        [
+            [2, 0, 0, 0],
+            [4, 0, 0, 0],
+            [8, 0, 0, 0],
+            [16, 0, 0, 0],
+        ]
+    )
+
+    assert 0 not in env.legal_actions()
+    assert set(env.legal_actions()) == {1}

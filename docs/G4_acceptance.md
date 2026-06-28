@@ -22,7 +22,7 @@
 结果：
 
 ```text
-18 passed
+20 passed
 ```
 
 ### sample checkpoint 评估
@@ -36,7 +36,7 @@
 结果：
 
 ```text
-average_score: 72.00
+average_score: 156.00
 best_max_tile: 16
 ```
 

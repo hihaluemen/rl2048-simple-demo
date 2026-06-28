@@ -12,6 +12,11 @@ class AlwaysLeftAgent:
         return 3
 
 
+class AlwaysInvalidUpAgent:
+    def select_action(self, observation: np.ndarray, step: int) -> int:
+        return 0
+
+
 def test_play_episode_records_boards_actions_and_scores():
     env = Game2048Env(seed=1)
 
@@ -33,3 +38,13 @@ def test_board_html_is_not_indented_markdown_code():
     assert "\n                <div" not in html
     assert '<div class="board">' in html
     assert "2048" not in html
+
+
+def test_play_episode_falls_back_to_legal_action():
+    env = Game2048Env(seed=1)
+
+    result = play_episode(env, AlwaysInvalidUpAgent(), seed=1, max_steps=8)
+
+    played_frames = result.frames[1:]
+    assert played_frames
+    assert all(frame.valid_move for frame in played_frames)

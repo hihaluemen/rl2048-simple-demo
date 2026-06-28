@@ -120,6 +120,7 @@ def render_checkpoint_preview(run_dir: Path) -> None:
         max_steps = st.slider("最大步数", min_value=1, max_value=500, value=120, step=1)
         autoplay = st.toggle("自动播放", value=False)
         speed = st.slider("播放速度（秒/步）", min_value=0.1, max_value=2.0, value=0.4, step=0.1)
+        st.caption("score 只在发生 tile 合并时增加；回放阶段会屏蔽无效动作。")
 
     try:
         result = build_play_result(str(run_dir), int(max_steps), int(seed))
@@ -153,13 +154,13 @@ def render_checkpoint_preview(run_dir: Path) -> None:
     frame = result.frames[selected_frame]
     with right:
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Score", frame.score)
-        c2.metric("Max Tile", frame.max_tile)
-        c3.metric("Step", selected_frame)
-        c4.metric("Action", frame.action_name or "-")
+        c1.metric("当前 Score", frame.score)
+        c2.metric("当前 Max Tile", frame.max_tile)
+        c3.metric("当前 Step", selected_frame)
+        c4.metric("当前 Action", frame.action_name or "-")
         render_board(frame.board)
         st.caption(
-            f"本局总步数={result.steps}，最终 score={result.score}，"
+            f"最终总步数={result.steps}，最终 score={result.score}，"
             f"最终 max_tile={result.max_tile}，terminated={result.terminated}"
         )
 

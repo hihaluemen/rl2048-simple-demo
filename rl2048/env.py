@@ -137,13 +137,15 @@ class Game2048Env:
         )
 
     def has_legal_moves(self) -> bool:
-        if np.any(self.board == 0):
-            return True
+        return bool(self.legal_actions())
+
+    def legal_actions(self) -> list[int]:
+        actions = []
         for action in ACTION_NAMES:
             moved_board, _ = self._move(action)
             if not np.array_equal(moved_board, self.board):
-                return True
-        return False
+                actions.append(action)
+        return actions
 
     def is_game_over(self) -> bool:
         return not self.has_legal_moves()

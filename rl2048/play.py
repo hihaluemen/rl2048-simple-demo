@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Protocol
 
 import numpy as np
+import torch
 
 from rl2048.env import ACTION_NAMES, Game2048Env
 
@@ -54,7 +55,7 @@ def play_episode(
     terminated = False
 
     for step in range(max_steps):
-        action = int(policy.select_action(observation, step=10**9 + step))
+        action = select_play_action(env, policy, observation, step)
         observation, reward, terminated, truncated, info = env.step(action)
         frames.append(
             PlayFrame(
@@ -77,3 +78,27 @@ def play_episode(
         steps=len(frames) - 1,
         terminated=terminated,
     )
+
+
+def select_play_action(
+    env: Game2048Env,
+    policy: Policy,
+    observation: np.ndarray,
+    step: int,
+) -> int:
+    legal_actions = env.legal_actions()
+    if not legal_actions:
+        return 0
+
+    if hasattr(policy, "q_network") and hasattr(policy, "device"):
+        obs_tensor = torch.as_tensor(
+            observation, dtype=torch.float32, device=policy.device
+        ).unsqueeze(0)
+        with torch.no_grad():
+            q_values = policy.q_network(obs_tensor).squeeze(0).detach().cpu().numpy()
+        return max(legal_actions, key=lambda action: float(q_values[action]))
+
+    action = int(policy.select_action(observation, step=10**9 + step))
+    if action in legal_actions:
+        return action
+    return legal_actions[0]

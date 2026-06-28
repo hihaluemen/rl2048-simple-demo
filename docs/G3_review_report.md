@@ -45,6 +45,7 @@
 - `scripts/train.py` 和 `scripts/evaluate.py` 可直接用 Python 运行。
 - checkpoint 缺失时，评估脚本给出清晰错误。
 - 模型自动游玩逻辑集中在 `rl2048/play.py`，CLI 和 UI 复用同一条 rollout 链路。
+- 回放阶段屏蔽无效动作，避免弱模型反复选择 no-op 导致演示卡住。
 - Streamlit 在无 checkpoint 时提示，在有 checkpoint 时加载模型并用棋盘格展示自动游玩过程。
 
 结论：评估脚本测试和自动游玩测试通过，UI 通过语法检查和 sample checkpoint 手动评估验证。
