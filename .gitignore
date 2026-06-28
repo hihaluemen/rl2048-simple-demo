@@ -1,0 +1,41 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local environment files
+.env
+.env.*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
+
+# Experiment outputs
+runs/*
+!runs/sample_dqn_2048/
+!runs/sample_dqn_2048/**
+
+# Model artifacts outside curated sample runs
+*.pt
+*.pth
+*.ckpt
+!runs/sample_dqn_2048/**/*.pt
+!runs/sample_dqn_2048/**/*.pth
+!runs/sample_dqn_2048/**/*.ckpt
