@@ -1,0 +1,9 @@
+{
+  "run_id": "sample_dqn_2048",
+  "start_time": "2026-06-29T00:55:49",
+  "end_time": "2026-06-29T00:55:49",
+  "total_episodes": 5,
+  "best_score": 568,
+  "best_max_tile": 64,
+  "latest_checkpoint_path": "runs/sample_dqn_2048/checkpoints/latest.pt"
+}
