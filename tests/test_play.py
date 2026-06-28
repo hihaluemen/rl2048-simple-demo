@@ -4,6 +4,7 @@ import numpy as np
 
 from rl2048.env import Game2048Env
 from rl2048.play import play_episode
+from scripts.app import board_html
 
 
 class AlwaysLeftAgent:
@@ -23,3 +24,12 @@ def test_play_episode_records_boards_actions_and_scores():
     assert result.steps == len(result.frames) - 1
     assert result.score >= 0
     assert result.max_tile >= 2
+
+
+def test_board_html_is_not_indented_markdown_code():
+    html = board_html(np.array([[0, 2, 4, 8], [16, 32, 64, 128], [0, 0, 2, 4], [8, 16, 32, 64]]))
+
+    assert html.startswith("<style>")
+    assert "\n                <div" not in html
+    assert '<div class="board">' in html
+    assert "2048" not in html

@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from scripts.evaluate import load_agent
 from rl2048.env import Game2048Env
@@ -65,47 +66,31 @@ def tile_font_color(value: int) -> str:
     return "#776e65" if value in {0, 2, 4} else "#f9f6f2"
 
 
-def render_board(board) -> None:
+def board_html(board) -> str:
     cells = []
     for row in board:
         for raw_value in row:
             value = int(raw_value)
             label = "" if value == 0 else str(value)
             cells.append(
-                f"""
-                <div class="tile" style="background:{tile_color(value)};color:{tile_font_color(value)};">
-                  {label}
-                </div>
-                """
+                f'<div class="tile" style="background:{tile_color(value)};'
+                f'color:{tile_font_color(value)};">{label}</div>'
             )
-    st.markdown(
-        f"""
-        <style>
-          .board {{
-            display: grid;
-            grid-template-columns: repeat(4, minmax(64px, 92px));
-            gap: 10px;
-            padding: 12px;
-            background: #bbada0;
-            width: fit-content;
-            border-radius: 8px;
-          }}
-          .tile {{
-            aspect-ratio: 1 / 1;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            font-weight: 700;
-            line-height: 1;
-            min-width: 64px;
-          }}
-        </style>
-        <div class="board">{''.join(cells)}</div>
-        """,
-        unsafe_allow_html=True,
+    return (
+        "<style>"
+        "body{margin:0;background:transparent;}"
+        ".board{display:grid;grid-template-columns:repeat(4,76px);"
+        "gap:10px;padding:12px;background:#bbada0;width:max-content;border-radius:8px;}"
+        ".tile{width:76px;height:76px;border-radius:6px;display:flex;"
+        "align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"
+        "'Segoe UI',sans-serif;font-size:26px;font-weight:700;line-height:1;}"
+        "</style>"
+        f'<div class="board">{"".join(cells)}</div>'
     )
+
+
+def render_board(board) -> None:
+    components.html(board_html(board), height=400, scrolling=False)
 
 
 @st.cache_data(show_spinner=False)
