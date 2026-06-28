@@ -1,0 +1,29 @@
+seed: 42
+run_name: dqn_2048_stronger
+
+env:
+  invalid_move_penalty: 4.0
+  empty_cell_weight: 0.2
+  max_tile_weight: 0.02
+
+training:
+  episodes: 5000
+  max_steps_per_episode: 2000
+  batch_size: 128
+  gamma: 0.99
+  learning_rate: 0.0003
+  replay_capacity: 100000
+  learning_starts: 5000
+  train_every: 4
+  target_update_interval: 2000
+  checkpoint_interval: 500
+  metrics_window: 100
+
+agent:
+  hidden_sizes: [256, 256]
+  epsilon_start: 1.0
+  epsilon_end: 0.03
+  epsilon_decay_steps: 200000
+
+paths:
+  runs_dir: runs

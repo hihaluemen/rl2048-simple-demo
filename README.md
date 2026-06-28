@@ -65,6 +65,33 @@ runs/<run_id>/
 
 默认训练配置在 [configs/dqn_2048.yaml](configs/dqn_2048.yaml)。
 
+如果想训练一个更像样的 DQN baseline，可以使用更长训练配置：
+
+```bash
+.venv/bin/python scripts/train.py --config configs/dqn_2048_stronger.yaml
+```
+
+这个配置会训练 5000 episodes，使用 `[256, 256]` MLP、更大的 replay buffer 和更长 epsilon 衰减。训练耗时取决于机器性能，可能需要几十分钟到数小时。训练完成后会输出新的 run 目录，例如：
+
+```text
+Run saved to: runs/20260629_xxxxxx_dqn_2048_stronger
+```
+
+评估新模型：
+
+```bash
+.venv/bin/python scripts/evaluate.py --run runs/你的run目录 --episodes 10
+```
+
+如果新模型效果更好，可以替换默认 sample run：
+
+```bash
+cp runs/你的run目录/config.yaml runs/sample_dqn_2048/config.yaml
+cp runs/你的run目录/metrics.csv runs/sample_dqn_2048/metrics.csv
+cp runs/你的run目录/summary.json runs/sample_dqn_2048/summary.json
+cp runs/你的run目录/checkpoints/latest.pt runs/sample_dqn_2048/checkpoints/latest.pt
+```
+
 ## 快速 sample checkpoint
 
 仓库内置了一个小型 sample run：
@@ -93,6 +120,7 @@ runs/sample_dqn_2048/
 .
 ├── configs/
 │   ├── dqn_2048.yaml
+│   ├── dqn_2048_stronger.yaml
 │   └── sample_dqn_2048.yaml
 ├── rl2048/
 │   ├── env.py
