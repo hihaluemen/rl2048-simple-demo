@@ -49,7 +49,28 @@ best_max_tile: 16
 
 结果：通过。
 
-## 待最终确认
+### 训练脚本快速验收
 
-- README 完成后，需要按 README 从头执行一次。
-- 如需提交远程仓库，执行 `git push -u origin main`。
+命令：
+
+```bash
+.venv/bin/python scripts/train.py --config configs/sample_dqn_2048.yaml
+```
+
+结果：
+
+```text
+Run saved to: runs/_tmp_sample_training/20260629_010236_sample_checkpoint
+```
+
+说明：该目录用于快速验收，已被 `.gitignore` 忽略。正式可展示样例保存在 `runs/sample_dqn_2048`。
+
+## 最终结论
+
+当前 MVP 已满足首版验收标准：
+
+- 测试通过。
+- 训练脚本可生成实验 artifacts。
+- sample checkpoint 可被评估脚本加载。
+- Streamlit 脚本语法检查通过，且可读取 sample run 数据。
+- README 已补充安装、测试、训练、评估和 UI 启动步骤。
